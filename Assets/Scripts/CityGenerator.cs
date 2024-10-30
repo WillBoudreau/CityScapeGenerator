@@ -11,28 +11,19 @@ public class CityGenerator : MonoBehaviour
     public float DistBetweenBlocks = 5.0f;
     public GameObject CityBlock;
     public GameObject CityCenter;
-    [Header("Building Variables")]
-    public int BuildingWidth;
-    public int BuildingHeight;
-    public int BuildingLength;
-    public int BuildingMinWidth;
-    public int BuildingMaxWidth;
-    public int BuildingMinHeight;
-    public int BuildingMaxHeight;
-    public int BuildingMaxLength;
-    public int BuildingMinLength;
-    public float DistFromCityCenter;
-    [Header("Road Variables")]
-    public int RoadWidth;
-    public int RoadLength;
-    public int RoadHeight;
+    public GameObject RoadBlock;
     [Header("City Block Variables")]
     public int CityBlockWidth;
     public int CityBlockLength;
+    [Header("Road Block Variables")]
+    public int RoadWidth;
+    public int RoadLength;
     [Header("Lists")]
-    public List<GameObject> buildings = new List<GameObject>();
-    public List<GameObject> roads = new List<GameObject>();
     public List<GameObject> cityBlocks = new List<GameObject>();
+    public List<GameObject> roadBlocks = new List<GameObject>();
+    [Header("Class calls")]
+    public BuildingGenerator buildingGenerator;
+    public RoadGenerator roadGenerator;
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space))
@@ -42,85 +33,72 @@ public class CityGenerator : MonoBehaviour
     }
     void GenerateCity()
     {
+        GenerateRoadBlocks();
         GenerateCityBlocks();
         GenerateBuildings();
+        GenerateRoads();
     }
     void GenerateBuildings()
     {
-        foreach(GameObject building in buildings)
+        foreach(GameObject building in buildingGenerator.buildings)
         {
             Destroy(building);
         }
-        buildings.Clear();
-
+        buildingGenerator.buildings.Clear();
         foreach (GameObject cityBlock in cityBlocks)
         {
-            BuildingDimension();
-            if (BuildingWidth != 0 && BuildingHeight != 0 && BuildingLength != 0)
+            buildingGenerator.BuildingDimension();
+            if (buildingGenerator.BuildingWidth != 0 && buildingGenerator.BuildingHeight != 0 && buildingGenerator.BuildingLength != 0)
             {
                 Vector3 pos = cityBlock.transform.position + new Vector3(0, -5, 0);
 
-                if(ValidPos(CityBlockPos((int)pos.x, (int)pos.z)))
+                if(ValidPos(CityBlockPos((int) pos.x, (int) pos.z)))
                 {
-                    GameObject building = GenerateBuilding(BuildingWidth, BuildingHeight, BuildingLength);
+                    Debug.Log("Valid Position");
+                    GameObject building = buildingGenerator.GenerateBuilding(buildingGenerator.BuildingWidth, buildingGenerator.BuildingHeight, buildingGenerator.BuildingLength);
                     building.transform.position = pos;
-                    building.transform.localScale = new Vector3(BuildingWidth, 1, BuildingLength);
-                    StartCoroutine(ScaleBuilding(building, BuildingHeight)); // Scale up based on y value
+                    building.transform.localScale = new Vector3(buildingGenerator.BuildingWidth, buildingGenerator.BuildingHeight, buildingGenerator.BuildingLength);
+                    StartCoroutine(buildingGenerator.ScaleBuilding(building, buildingGenerator.BuildingHeight)); // Scale up based on y value
                 }
             }
         }
     }
-    bool ValidPos(Vector3 pos)
+    void GenerateRoads()
     {
-        foreach(GameObject building in buildings)
+        foreach(GameObject road in roadGenerator.roads)
         {
-            if(Vector3.Distance(pos, building.transform.position) < BuildingWidth + DistBetweenBuildings)
-            {
-                return false;
-            }
+            Destroy(road);
         }
-        return true;
-    }
-    GameObject GenerateBuilding(int BuildingWidth, int BuildingHeight, int BuildingLength)
-    {
-        GameObject building = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        buildings.Add(building);
-        return building;
-    }
-    void BuildingDimension(GameObject CityCenter)
-    {
-        foreach(GameObject building in buildings)
+        roadGenerator.roads.Clear();
+        foreach(GameObject roadBlock in roadBlocks)
         {
-            if(DistFromCityCenter < 10)
+            roadGenerator.RoadDimension();
+            if(roadGenerator.RoadWidth != 0 && roadGenerator.RoadLength != 0)
             {
-                BuildingWidth = Random.Range(BuildingMinWidth, BuildingMaxWidth);
-                BuildingHeight = Random.Range(BuildingMinHeight, BuildingMaxHeight);
-                BuildingLength = Random.Range(BuildingMinLength, BuildingMaxLength);
-            }
-            else
-            {
-                BuildingWidth = Random.Range(BuildingMinWidth, BuildingMaxWidth);
-                BuildingHeight = Random.Range(BuildingMinHeight, BuildingMaxHeight);
-                BuildingLength = Random.Range(BuildingMinLength, BuildingMaxLength);
+                Vector3 pos = roadBlock.transform.position + new Vector3(0, -5, 0);
+                if(ValidPos(RoadBlockPos((int) pos.x, (int) pos.z)))
+                {
+                    GameObject road = roadGenerator.GenerateRoad(roadGenerator.RoadWidth, roadGenerator.RoadLength);
+                    road.transform.position = pos;
+                    StartCoroutine(roadGenerator.ScaleRoad(road, roadGenerator.RoadLength));
+                    roadGenerator.roads.Add(road);
+                }
             }
         }
     }
-    Vector3 BuildingPos(int x, int z)
+    void BlockCheck(List<GameObject> cityBlocks,List<GameObject> roadBlocks)
     {
-        x = Random.Range(0, cityWidth);
-        z = Random.Range(0, cityLength);
-        return new Vector3(x, -5, z);
-    }
-    IEnumerator ScaleBuilding(GameObject building, float targetHeight)
-    {
-        float currentHeight = 1;
-        while (currentHeight < targetHeight)
+        foreach(GameObject cityBlock in cityBlocks)
         {
-            currentHeight += Time.deltaTime * 2;
-            building.transform.localScale = new Vector3(building.transform.localScale.x, currentHeight, building.transform.localScale.z);
-            yield return null;
+            foreach(GameObject roadBlock in roadBlocks)
+            {
+                if(Vector3.Distance(cityBlock.transform.position, roadBlock.transform.position) < 1)
+                {
+                    Destroy(RoadBlock);
+                    cityBlocks.Remove(RoadBlock);
+                }
+            }
         }
-        building.transform.localScale = new Vector3(building.transform.localScale.x, targetHeight, building.transform.localScale.z);
     }
     void GenerateCityBlocks()
     {
@@ -129,9 +107,9 @@ public class CityGenerator : MonoBehaviour
             Destroy(cityBlock);
         }
         cityBlocks.Clear();
-        for(int i = 0; i<= cityWidth; i++)
+        for(int i = 0; i<= cityWidth; i ++)
         {
-            for(int j = 0; j <= cityLength; j++)
+            for(int j = 0; j <= cityLength; j ++)
             {
                 CityBlockDimension();
                 if(CityBlockWidth != 0 && CityBlockLength != 0)
@@ -143,6 +121,39 @@ public class CityGenerator : MonoBehaviour
                 }
             }
         }
+    }
+    void GenerateRoadBlocks()
+    {
+        foreach(GameObject road in roadBlocks)
+        {
+            Destroy(road);
+        }
+        roadBlocks.Clear();
+        for(int i = 0; i <= cityWidth; i += 2)
+        {
+            for(int j = 0; j <= cityLength; j += 2)
+            {
+                RoadBlockDimension();
+                if(RoadWidth != 0 && RoadLength != 0)
+                {
+                    Vector3 pos = new Vector3(i * (RoadWidth + DistBetweenBlocks), 0, j * (RoadLength + DistBetweenBlocks));
+                    GameObject road = GenerateRoadBlock(RoadWidth, RoadLength);
+                    road.transform.position = pos;
+                    roadBlocks.Add(road);
+                }
+            }
+        }
+    }
+    bool ValidPos(Vector3 pos)
+    {
+        foreach(GameObject building in buildingGenerator.buildings)
+        {
+            if(Vector3.Distance(pos, building.transform.position) < buildingGenerator.BuildingWidth + DistBetweenBuildings)
+            {
+                return false;
+            }
+        }
+        return true;
     }
     GameObject GenerateCityBlock(int CityBlockWidth, int CityBlockLength)
     {
@@ -158,6 +169,27 @@ public class CityGenerator : MonoBehaviour
     {
         x = Random.Range(0, cityWidth);
         y = Random.Range(0, cityLength);
+        return new Vector3(x, 0, y);
+    }
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(transform.position, new Vector3(cityWidth, 0, cityLength));
+    }
+    GameObject GenerateRoadBlock(int RoadWidth, int RoadLength)
+    {
+        GameObject road = Instantiate(RoadBlock);
+        return road;
+    }
+    void RoadBlockDimension()
+    {
+        RoadLength = 5;
+        RoadWidth = 5;
+    }
+    Vector3 RoadBlockPos(int x, int y)
+    {
+        x = Random.Range(1, cityWidth);
+        y = Random.Range(1, cityLength);
         return new Vector3(x, 0, y);
     }
 }
