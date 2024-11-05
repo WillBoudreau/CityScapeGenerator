@@ -33,6 +33,8 @@ public class BuildingGenerator : MonoBehaviour
                     newBuilding.buildingType = (Building.BuildingType)Random.Range(0, 4);
                     newBuilding.SelectType(newBuilding.buildingType);
 
+                    newBuilding.buildingSize = (Building.BuildingSize)Random.Range(0,0);
+                    newBuilding.UpgradeSize(newBuilding.buildingSize);
                     newBuilding.transform.localScale = newBuilding.GenerateSize();
                     buildings.Add(newBuilding);
                 }
@@ -54,7 +56,6 @@ public class BuildingGenerator : MonoBehaviour
         {
             if (Vector3.Distance(position, road.transform.position) <= minDistance)
             {
-                Debug.Log("Building too close to road");
                 return false;
             }
         }

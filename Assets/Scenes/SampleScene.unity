@@ -355,8 +355,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roadGenerator: {fileID: 844427682}
   buildingGenerator: {fileID: 844427683}
-  CityWidth: 100
-  CityLength: 100
+  CityWidth: 11.7
+  CityLength: 12.3
   GroundPos: {fileID: 706725316}
 --- !u!4 &844427681
 Transform:
@@ -497,6 +497,56 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 34.965, y: 0, z: 0}
+--- !u!1 &1725049807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1725049809}
+  - component: {fileID: 1725049808}
+  m_Layer: 0
+  m_Name: CityStats
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1725049808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725049807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 951db71113734fd4a90b8da01012c56b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingGenerator: {fileID: 0}
+  roadGenerator: {fileID: 0}
+  money: 0
+  Electricity: 0
+  People: 0
+  costToUpgradeResidential: 0
+--- !u!4 &1725049809
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1725049807}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.260475, y: 8.802601, z: 4.9990506}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1725210297 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7193486185009224750, guid: 1fe3b53c015abe34786a1c069bd87675, type: 3}
@@ -578,3 +628,4 @@ SceneRoots:
   - {fileID: 706725320}
   - {fileID: 844427681}
   - {fileID: 2110500622}
+  - {fileID: 1725049809}

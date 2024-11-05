@@ -11,6 +11,13 @@ public class Building : MonoBehaviour
         Industrial,
         Government,
     }
+    public enum BuildingSize
+    {
+        Small,
+        Medium,
+        Large,
+    }
+    public BuildingSize buildingSize;
     public BuildingType buildingType;
     public GameObject buildingPrefab;
     [Range(0, 100)]
@@ -47,6 +54,28 @@ public class Building : MonoBehaviour
                 break;
         }
     }
+    public void UpgradeSize(BuildingSize buildingSize)
+    {
+        switch (buildingSize)
+        {
+            case BuildingSize.Small:
+                BuildingWidth = 5f;
+                BuildingHeight = 10f;
+                BuildingLength = 5f;
+                break;
+            case BuildingSize.Medium:
+                BuildingWidth = 5f;
+                BuildingHeight = 20f;
+                BuildingLength = 5f;
+                break;
+            case BuildingSize.Large:
+                BuildingWidth = 5f;
+                BuildingHeight = 30f;
+                BuildingLength = 5f;
+                break;
+        }
+        transform.localScale = GenerateSize();
+    }
     void GenerateBuilding()
     {
         foreach (Building building in buildings)
@@ -63,6 +92,11 @@ public class Building : MonoBehaviour
                 if (building.buildingType == this.buildingType)
                 {
                     ChangeBuildingType(building);
+                
+                }
+                else if(building.buildingSize == this.buildingSize)
+                {
+                    UpgradeSize(buildingSize);
                 }
             }
         }
