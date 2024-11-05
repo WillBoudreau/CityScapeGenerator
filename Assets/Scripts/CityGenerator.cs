@@ -24,40 +24,14 @@ public class CityGenerator : MonoBehaviour
             GenerateCity();
         }
     }
-    // void ClearCity()
-    // {
-    //     foreach (GameObject road in roadGenerator.roads)
-    //     {
-    //         Destroy(road);
-    //     }
-    //     foreach (Building building in buildingGenerator.buildings)
-    //     {
-    //         Destroy(building);
-    //     }
-    //     buildingGenerator.buildings.Clear();
-    //     roadGenerator.roads.Clear();
-    // }
     void GenerateCity()
     {
         CreateCity();
-        FindValidPOS(buildingGenerator.buildings, roadGenerator.roads);
-    }
-    void FindValidPOS(List<Building> Buildings, List<GameObject> Roads)
-    {
-        foreach (Building building in Buildings)
-        {
-            foreach (GameObject road in Roads)
-            {
-                if (building.transform.position == road.transform.position)
-                {
-                    Destroy(building);
-                }
-            }
-        }
     }
     void CreateCity()
     {
-        roadGenerator.GenerateRoads(CityWidth, CityLength);
-        buildingGenerator.GenerateBuildings(CityWidth, CityLength);
+        roadGenerator.GenerateRoads(CityWidth, CityLength,buildingGenerator);
+        buildingGenerator.GenerateBuildings(CityWidth, CityLength,roadGenerator);
     }
+    
 }
