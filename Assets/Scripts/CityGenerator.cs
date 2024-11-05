@@ -24,6 +24,7 @@ public class CityGenerator : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
+            cityStats.ResetStats();
             GenerateDimensions();
             CreateCity();
         }

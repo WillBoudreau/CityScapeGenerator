@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 public class CityStats : MonoBehaviour
 {
     [Header("City Stats")]
+    [Header("Class Calls")]
     public BuildingGenerator buildingGenerator;
     public RoadGenerator roadGenerator;
+    [Header("UI Elements")]
     public GameObject FillCircle;
+    public Slider TimerSlider;
+    [Header("City Stats")]
     public float money;
     public float Electricity;
     public int People;
@@ -21,12 +26,11 @@ public class CityStats : MonoBehaviour
 
     void Update()
     {
+        Timer();
         CheckStats();
-        DeadLine = 5;
     }
     void CheckStats()
     {
-        FillCircle.GetComponent<UnityEngine.UI.Image>().fillAmount = MonthTimer / DeadLine;
         if(MonthTimer >= DeadLine)
         {
             GenerateStats();
@@ -37,6 +41,21 @@ public class CityStats : MonoBehaviour
         {
             MonthTimer += Time.deltaTime;
         }
+    }
+    public void ResetStats()
+    {
+        money = 0;
+        Electricity = 0;
+        People = 0;
+        PeopleMax = 0;
+        MonthTimer = 0;
+        DeadLine = 5;
+        CommercialBonus = 0;
+    }
+    void Timer()
+    {
+        DeadLine = TimerSlider.value;
+        FillCircle.GetComponent<UnityEngine.UI.Image>().fillAmount = MonthTimer / DeadLine;
     }
     void GenerateStats()
     {
