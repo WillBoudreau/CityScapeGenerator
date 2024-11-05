@@ -6,8 +6,9 @@ public class CityGenerator : MonoBehaviour
 {
     [Header("City Generation")]
     [Header("Class calls")]
-    public RoadGenerator roadGenerator;
-    public BuildingGenerator buildingGenerator;
+    [SerializeField] private RoadGenerator roadGenerator;
+    [SerializeField] private BuildingGenerator buildingGenerator;
+    [SerializeField]private CityStats cityStats;
     [Header("City Size")]
     [Range(0, 100)]
     public float CityWidth = 100f;
@@ -21,12 +22,8 @@ public class CityGenerator : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            GenerateCity();
+            CreateCity();
         }
-    }
-    void GenerateCity()
-    {
-        CreateCity();
     }
     void CreateCity()
     {

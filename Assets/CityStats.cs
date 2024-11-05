@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class CityStats : MonoBehaviour
 {
+    [Header("City Stats")]
     public BuildingGenerator buildingGenerator;
     public RoadGenerator roadGenerator;
+    public GameObject FillCircle;
     public float money;
     public float Electricity;
     public int People;
     public int PeopleMax;
     public float MonthTimer;
+    public float DeadLine = 5;
     public float CommercialBonus;
     public float costToUpgradeResidential = 10;
     public float costToUpgradeCommercial = 10;
@@ -20,10 +22,12 @@ public class CityStats : MonoBehaviour
     void Update()
     {
         CheckStats();
+        DeadLine = 5;
     }
     void CheckStats()
     {
-        if(MonthTimer >= 5)
+        FillCircle.GetComponent<UnityEngine.UI.Image>().fillAmount = MonthTimer / DeadLine;
+        if(MonthTimer >= DeadLine)
         {
             GenerateStats();
             ChooseWhatToUpgrade();
@@ -128,15 +132,15 @@ public class CityStats : MonoBehaviour
         {
             UpgradeResidential();
         }
-        else if(money >= costToUpgradeCommercial && Electricity >= 1000)
+        else if(money >= costToUpgradeCommercial && Electricity >= 1000 && People >= 100)
         {
             UpgradeCommercial();
         }
-        else if(money >= costToUpgradeIndustrial)
+        else if(money >= costToUpgradeIndustrial && People >= 50)
         {
             UpgradeIndustrial();
         }
-        else if(money >= costToUpgradeGovernment && Electricity >= 1000)
+        else if(money >= costToUpgradeGovernment && Electricity >= 1000 && People >= 100)
         {
             UpgradeGovernment();
         }
@@ -177,6 +181,7 @@ public class CityStats : MonoBehaviour
                     CommercialBonus += 2f;
                     money -= costToUpgradeCommercial;
                     Electricity -= 1000;
+                    People -= 100;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
@@ -185,6 +190,7 @@ public class CityStats : MonoBehaviour
                     CommercialBonus += 5f;
                     money -= costToUpgradeCommercial;
                     Electricity -= 1000;
+                    People -= 100;
                 }
             }
         }
@@ -200,14 +206,14 @@ public class CityStats : MonoBehaviour
                     building.UpgradeSize(Building.BuildingSize.Medium);
                     building.buildingSize = Building.BuildingSize.Medium;
                     money -= costToUpgradeIndustrial;
-                    Electricity -= 1000;
+                    People -= 50;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
                     building.UpgradeSize(Building.BuildingSize.Large);
                     building.buildingSize = Building.BuildingSize.Large;
                     money -= costToUpgradeIndustrial;
-                    Electricity -= 1000;
+                    People -= 50;
                 }
             }
         }

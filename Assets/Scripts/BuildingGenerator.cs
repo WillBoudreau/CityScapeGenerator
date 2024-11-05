@@ -8,10 +8,6 @@ public class BuildingGenerator : MonoBehaviour
     public Building buildingPrefab;
     public float BuildingSpacing;
     public List<Building> buildings = new List<Building>();
-    void Start()
-    {
-        OnDrawGizmos();
-    }
     public void GenerateBuildings(float CityWidth, float CityLength,RoadGenerator roadGenerator)
     {
         Debug.Log("Generating Buildings");
@@ -39,14 +35,6 @@ public class BuildingGenerator : MonoBehaviour
                     buildings.Add(newBuilding);
                 }
             }
-        }
-    }
-    public void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        foreach (Building building in buildings)
-        {
-            Gizmos.DrawWireCube(building.transform.position, building.GenerateSize());
         }
     }
     bool IsAvailible(Vector3 position, RoadGenerator roadGenerator)

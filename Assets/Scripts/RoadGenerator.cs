@@ -8,7 +8,6 @@ public class RoadGenerator : MonoBehaviour
     public float RoadHeight = 0.1f; 
     public GameObject roadPrefab;
     public List<GameObject> roads = new List<GameObject>();
-
     public void GenerateRoads(float CityWidth, float CityLength, BuildingGenerator buildingGenerator)
     {
         Debug.Log("Generating Roads");
