@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class CityGenerator : MonoBehaviour
 {
@@ -10,10 +12,10 @@ public class CityGenerator : MonoBehaviour
     [SerializeField] private BuildingGenerator buildingGenerator;
     [SerializeField]private CityStats cityStats;
     [Header("City Size")]
-    [Range(0, 100)]
-    public float CityWidth = 100f;
-    [Range(0, 100)]
-    public float CityLength = 100f;
+    public float CityWidth;
+    [SerializeField] private Slider CityWidthSlider;
+    public float CityLength;
+    [SerializeField] private Slider CityLengthSlider;
     [Header("Road Generation")]  
     [Header("City Prefabs")]
     public GameObject GroundPos;
@@ -22,6 +24,7 @@ public class CityGenerator : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
+            GenerateDimensions();
             CreateCity();
         }
     }
@@ -29,6 +32,15 @@ public class CityGenerator : MonoBehaviour
     {
         roadGenerator.GenerateRoads(CityWidth, CityLength,buildingGenerator);
         buildingGenerator.GenerateBuildings(CityWidth, CityLength,roadGenerator);
+    }
+    void GenerateDimensions()
+    {
+        CityWidthSlider.maxValue = 100;
+        CityWidthSlider.minValue = 0;
+        CityLengthSlider.maxValue = 100;
+        CityLengthSlider.minValue = 0;
+        CityWidth = CityWidthSlider.value;
+        CityLength = CityLengthSlider.value;
     }
     
 }
