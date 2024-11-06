@@ -15,6 +15,7 @@ public class DisplayStats : MonoBehaviour
     [SerializeField] private TMPro.TextMeshProUGUI electricityText;
     [SerializeField] private TMPro.TextMeshProUGUI peopleText;
     [SerializeField] private TMPro.TextMeshProUGUI commercialBonusText;
+    [SerializeField] private TMPro.TextMeshProUGUI stabilityText;
 
     void Update()
     {
@@ -26,5 +27,6 @@ public class DisplayStats : MonoBehaviour
         electricityText.text = "Electricity: " + cityStats.Electricity;
         peopleText.text = "People: " + cityStats.People;
         commercialBonusText.text = "Commercial Bonus: " + cityStats.CommercialBonus;
+        stabilityText.text = "Stability: " + cityStats.Stability.ToString("F0");
     }
 }
