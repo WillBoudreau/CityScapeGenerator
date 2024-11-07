@@ -16,9 +16,6 @@ public class CityGenerator : MonoBehaviour
     [SerializeField] private Slider CityWidthSlider;
     public float CityLength;
     [SerializeField] private Slider CityLengthSlider;
-    [Header("Road Generation")]  
-    [Header("City Prefabs")]
-    public GameObject GroundPos;
     // Update is called once per frame
     void Update()
     {

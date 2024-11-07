@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 public class CityStats : MonoBehaviour
 {
+    private UnityEngine.UI.Image fillCircleImage;
+
     [Header("City Stats")]
     [Header("Class Calls")]
     public BuildingGenerator buildingGenerator;
@@ -24,6 +26,11 @@ public class CityStats : MonoBehaviour
     public float costToUpgradeCommercial = 10;
     public float costToUpgradeIndustrial = 10;
     public float costToUpgradeGovernment = 10;
+
+    void Start()
+    {
+        fillCircleImage = FillCircle.GetComponent<UnityEngine.UI.Image>();
+    }
 
     void Update()
     {
@@ -57,8 +64,9 @@ public class CityStats : MonoBehaviour
     }
     void Timer()
     {
+        Debug.Log(MonthTimer);
         DeadLine = TimerSlider.value;
-        FillCircle.GetComponent<UnityEngine.UI.Image>().fillAmount = MonthTimer / DeadLine;
+        fillCircleImage.fillAmount = MonthTimer / DeadLine;
     }
     void GenerateStats()
     {
@@ -67,6 +75,53 @@ public class CityStats : MonoBehaviour
         GenerateElectricity();
         GenerateStability();
         SubstractStats();
+    }
+    bool ChooseUpgrade(Building.BuildingType buildingType, float upgradeCost, float upgradeElectricity, int upgradePeople, float upgradeStability)
+    {
+        if(money >= upgradeCost && Electricity >= upgradeElectricity && People >= upgradePeople && Stability >= upgradeStability)
+        {
+            return true;
+            UpgradeBuilding(buildingType);
+        }
+        return false;
+    }
+    void UpgradeBuilding(Building.BuildingType buildingType)
+    {
+        foreach(Building building in buildingGenerator.buildings)
+        {
+            if(building.buildingType == buildingType)
+            {
+                if(building.buildingSize == Building.BuildingSize.Small)
+                {
+                    building.UpgradeSize(Building.BuildingSize.Medium);
+                    building.buildingSize = Building.BuildingSize.Medium;
+                }
+                else if(building.buildingSize == Building.BuildingSize.Medium)
+                {
+                    building.UpgradeSize(Building.BuildingSize.Large);
+                    building.buildingSize = Building.BuildingSize.Large;
+                }
+            }
+        }
+    }
+    void ChooseWhatToUpgrade()
+    {
+        if(ChooseUpgrade(Building.BuildingType.Commercial, costToUpgradeCommercial, 1000, 100, 75))
+        {
+            UpgradeBuilding(Building.BuildingType.Commercial);
+        }
+        else if(ChooseUpgrade(Building.BuildingType.Industrial, costToUpgradeIndustrial, 0, 50, 75))
+        {
+            UpgradeBuilding(Building.BuildingType.Industrial);
+        }
+        else if(ChooseUpgrade(Building.BuildingType.Government, costToUpgradeGovernment, 1000, 100, 0))
+        {
+            UpgradeBuilding(Building.BuildingType.Government);
+        }
+        else if(ChooseUpgrade(Building.BuildingType.Residential, costToUpgradeResidential, 1000, 100, 0))
+        {
+            UpgradeBuilding(Building.BuildingType.Residential);
+        }
     }
     void GenerateMoney()
     {
@@ -136,161 +191,105 @@ public class CityStats : MonoBehaviour
             {
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
-                    Stability += 1;
+                    Stability += 50;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    Stability += 10;
+                    Stability += 70;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Large)
                 {
-                    Stability += 15;
-                }
-                else if(Stability >= 100)
-                {
-                    Stability = 100;
+                    Stability += 90;
                 }
             }
+        }
+        if(Stability >= 100)
+        {
+            Stability = 100;
         }
     }
     void SubstractStats()
     {
         foreach(Building building in buildingGenerator.buildings)
         {
-            if(building.buildingType != Building.BuildingType.Industrial)
+                if(building.buildingType != Building.BuildingType.Industrial)
+                {
+                    if(building.buildingSize == Building.BuildingSize.Small)
+                    {
+                        Electricity -= 10;
+                    }
+                    else if(building.buildingSize == Building.BuildingSize.Medium)
+                    {
+                        Electricity -= 20;
+                    }
+                    else if(building.buildingSize == Building.BuildingSize.Large)
+                    {
+                        Electricity -= 30;
+                    }
+                    if(Electricity <= 0)
+                    {
+                        Electricity = 0;
+                    }
+                }
+            if(building.buildingType != Building.BuildingType.Residential)
             {
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
-                    Electricity -= 10;
+                    People -= 1;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    Electricity -= 20;
+                    People -= 5;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Large)
                 {
-                    Electricity -= 30;
+                    People -= 10;
                 }
-                else if(Electricity <= 0)
+                if(People <= 0)
                 {
-                    Electricity = 0;
+                    People = 0;
                 }
             }
-        }
-    }
-    void ChooseWhatToUpgrade()
-    {
-        if(money >= costToUpgradeResidential && Electricity >= 1000 && Stability >= 75)
-        {
-            UpgradeResidential();
-        }
-        else if(money >= costToUpgradeCommercial && Electricity >= 1000 && People >= 100 && Stability >= 75)
-        {
-            UpgradeCommercial();
-        }
-        else if(money >= costToUpgradeIndustrial && People >= 50 && Stability >= 75)
-        {
-            UpgradeIndustrial();
-        }
-        else if(money >= costToUpgradeGovernment && Electricity >= 1000 && People >= 100)
-        {
-            UpgradeGovernment();
-        }
-    }
-    void UpgradeResidential()
-    {
-        foreach(Building building in buildingGenerator.buildings)
-        {
-            if(building.buildingType == Building.BuildingType.Residential)
+            if(building.buildingType != Building.BuildingType.Commercial)
             {
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
-                    building.UpgradeSize(Building.BuildingSize.Medium);
-                    building.buildingSize = Building.BuildingSize.Medium;
-                    money -= costToUpgradeResidential;
-                    Electricity -= 1000;
+                    CommercialBonus -= 0.1f;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    building.UpgradeSize(Building.BuildingSize.Large);
-                    building.buildingSize = Building.BuildingSize.Large;
-                    money -= costToUpgradeResidential;
-                    Electricity -= 1000;
+                    CommercialBonus -= 0.2f;
+                }
+                else if(building.buildingSize == Building.BuildingSize.Large)
+                {
+                    CommercialBonus -= 0.3f;
+                }
+                if(CommercialBonus <= 0)
+                {
+                    CommercialBonus = 0;
                 }
             }
-        }
-    }
-    void UpgradeCommercial()
-    {
-        foreach(Building building in buildingGenerator.buildings)
-        {
-            Debug.Log("Upgrading Commercial");
-            if(building.buildingType == Building.BuildingType.Commercial)
-            {
-                Debug.Log("Upgrading Commercial");
-                if(building.buildingSize == Building.BuildingSize.Small)
-                {
-                    Debug.Log("Upgrading Commercial");
-                    building.UpgradeSize(Building.BuildingSize.Medium);
-                    building.buildingSize = Building.BuildingSize.Medium;
-                    CommercialBonus += 2f;
-                    money -= costToUpgradeCommercial;
-                    Electricity -= 1000;
-                    People -= 100;
-                }
-                else if(building.buildingSize == Building.BuildingSize.Medium)
-                {
-                    Debug.Log("Upgrading Commercial");
-                    building.UpgradeSize(Building.BuildingSize.Large);
-                    building.buildingSize = Building.BuildingSize.Large;
-                    CommercialBonus += 5f;
-                    money -= costToUpgradeCommercial;
-                    Electricity -= 1000;
-                    People -= 100;
-                }
-            }
-        }
-    }
-    void UpgradeIndustrial()
-    {
-        foreach(Building building in buildingGenerator.buildings)
-        {
-            if(building.buildingType == Building.BuildingType.Industrial)
+            if(building.buildingType != Building.BuildingType.Government)
             {
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
-                    building.UpgradeSize(Building.BuildingSize.Medium);
-                    building.buildingSize = Building.BuildingSize.Medium;
-                    money -= costToUpgradeIndustrial;
-                    People -= 50;
+                    Stability -= 5;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    building.UpgradeSize(Building.BuildingSize.Large);
-                    building.buildingSize = Building.BuildingSize.Large;
-                    money -= costToUpgradeIndustrial;
-                    People -= 50;
+                    Stability -= 7;
+                }
+                else if(building.buildingSize == Building.BuildingSize.Large)
+                {
+                    Stability -= 9;
+                }
+                if(Stability <= 0)
+                {
+                    Stability = 0;
                 }
             }
         }
-    }
-    void UpgradeGovernment()
-    {
-        foreach(Building building in buildingGenerator.buildings)
-        {
-            if(building.buildingType == Building.BuildingType.Government)
-            {
-                building.UpgradeSize(Building.BuildingSize.Medium);
-                building.buildingSize = Building.BuildingSize.Medium;
-                
-                money -= costToUpgradeGovernment;
-            }
-            else if(building.buildingSize == Building.BuildingSize.Medium)
-            {
-                building.UpgradeSize(Building.BuildingSize.Large);
-                building.buildingSize = Building.BuildingSize.Large;
-                money -= costToUpgradeGovernment;
-            }
-        }
+        
     }
 }
+

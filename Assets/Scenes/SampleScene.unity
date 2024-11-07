@@ -401,7 +401,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1103.2, y: -25}
+  m_AnchoredPosition: {x: 1261, y: -25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &155910135
@@ -1598,7 +1598,6 @@ MonoBehaviour:
   CityWidthSlider: {fileID: 282330632}
   CityLength: 56
   CityLengthSlider: {fileID: 1493164898}
-  GroundPos: {fileID: 706725316}
 --- !u!4 &844427681
 Transform:
   m_ObjectHideFlags: 0
@@ -3197,7 +3196,7 @@ MonoBehaviour:
   electricityText: {fileID: 45623451}
   peopleText: {fileID: 1783019808}
   commercialBonusText: {fileID: 476808919}
-  stabilityText: {fileID: 0}
+  stabilityText: {fileID: 155910135}
 --- !u!114 &1725210297 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7193486185009224750, guid: 1fe3b53c015abe34786a1c069bd87675, type: 3}
