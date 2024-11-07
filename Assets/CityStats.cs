@@ -9,7 +9,6 @@ public class CityStats : MonoBehaviour
     [Header("City Stats")]
     [Header("Class Calls")]
     public BuildingGenerator buildingGenerator;
-    public RoadGenerator roadGenerator;
     [Header("UI Elements")]
     public GameObject FillCircle;
     public Slider TimerSlider;
@@ -75,13 +74,14 @@ public class CityStats : MonoBehaviour
         GenerateElectricity();
         GenerateStability();
         SubstractStats();
+        CheckBalanceStats();
     }
     bool ChooseUpgrade(Building.BuildingType buildingType, float upgradeCost, float upgradeElectricity, int upgradePeople, float upgradeStability)
     {
         if(money >= upgradeCost && Electricity >= upgradeElectricity && People >= upgradePeople && Stability >= upgradeStability)
         {
-            return true;
             UpgradeBuilding(buildingType);
+            return true;
         }
         return false;
     }
@@ -106,19 +106,19 @@ public class CityStats : MonoBehaviour
     }
     void ChooseWhatToUpgrade()
     {
-        if(ChooseUpgrade(Building.BuildingType.Commercial, costToUpgradeCommercial, 1000, 100, 75))
+        if(ChooseUpgrade(Building.BuildingType.Commercial, costToUpgradeCommercial, 100, 10, 10))
         {
             UpgradeBuilding(Building.BuildingType.Commercial);
         }
-        else if(ChooseUpgrade(Building.BuildingType.Industrial, costToUpgradeIndustrial, 0, 50, 75))
+        else if(ChooseUpgrade(Building.BuildingType.Industrial, costToUpgradeIndustrial, 50, 5, 5))
         {
             UpgradeBuilding(Building.BuildingType.Industrial);
         }
-        else if(ChooseUpgrade(Building.BuildingType.Government, costToUpgradeGovernment, 1000, 100, 0))
+        else if(ChooseUpgrade(Building.BuildingType.Government, costToUpgradeGovernment, 200, 20, 20))
         {
             UpgradeBuilding(Building.BuildingType.Government);
         }
-        else if(ChooseUpgrade(Building.BuildingType.Residential, costToUpgradeResidential, 1000, 100, 0))
+        else if(ChooseUpgrade(Building.BuildingType.Residential, costToUpgradeResidential, 100, 10, 10))
         {
             UpgradeBuilding(Building.BuildingType.Residential);
         }
@@ -129,15 +129,15 @@ public class CityStats : MonoBehaviour
         {
             if(building.buildingType == Building.BuildingType.Commercial)
             {
-                money += 100 * CommercialBonus;
+                money += 50 * CommercialBonus;
             }
             else if(building.buildingType == Building.BuildingType.Industrial)
             {
-                money += 50;
+                money += 25;
             }
             else if(building.buildingType == Building.BuildingType.Government)
             {
-                money += 200;
+                money += 100;
             }
         }
     }
@@ -149,15 +149,15 @@ public class CityStats : MonoBehaviour
             {
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
-                    People += 10;
+                    People += 5;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    People += 20;
+                    People += 10;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Large)
                 {
-                    People += 30;
+                    People += 15;
                 }
             }
         }
@@ -170,15 +170,15 @@ public class CityStats : MonoBehaviour
             {
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
-                    Electricity += 100;
+                    Electricity += 50;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    Electricity += 500;
+                    Electricity += 250;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Large)
                 {
-                    Electricity += 1000;
+                    Electricity += 500;
                 }
             }
         }
@@ -191,15 +191,15 @@ public class CityStats : MonoBehaviour
             {
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
-                    Stability += 50;
+                    Stability += 25;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    Stability += 70;
+                    Stability += 35;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Large)
                 {
-                    Stability += 90;
+                    Stability += 45;
                 }
             }
         }
@@ -216,15 +216,15 @@ public class CityStats : MonoBehaviour
                 {
                     if(building.buildingSize == Building.BuildingSize.Small)
                     {
-                        Electricity -= 10;
+                        Electricity -= 5;
                     }
                     else if(building.buildingSize == Building.BuildingSize.Medium)
                     {
-                        Electricity -= 20;
+                        Electricity -= 10;
                     }
                     else if(building.buildingSize == Building.BuildingSize.Large)
                     {
-                        Electricity -= 30;
+                        Electricity -= 15;
                     }
                     if(Electricity <= 0)
                     {
@@ -239,11 +239,11 @@ public class CityStats : MonoBehaviour
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    People -= 5;
+                    People -= 2;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Large)
                 {
-                    People -= 10;
+                    People -= 3;
                 }
                 if(People <= 0)
                 {
@@ -254,15 +254,15 @@ public class CityStats : MonoBehaviour
             {
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
-                    CommercialBonus -= 0.1f;
+                    CommercialBonus -= 0.05f;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    CommercialBonus -= 0.2f;
+                    CommercialBonus -= 0.1f;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Large)
                 {
-                    CommercialBonus -= 0.3f;
+                    CommercialBonus -= 0.15f;
                 }
                 if(CommercialBonus <= 0)
                 {
@@ -273,15 +273,15 @@ public class CityStats : MonoBehaviour
             {
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
-                    Stability -= 5;
+                    Stability -= 1f;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Medium)
                 {
-                    Stability -= 7;
+                    Stability -= 2f;
                 }
                 else if(building.buildingSize == Building.BuildingSize.Large)
                 {
-                    Stability -= 9;
+                    Stability -= 3f;
                 }
                 if(Stability <= 0)
                 {
@@ -291,5 +291,41 @@ public class CityStats : MonoBehaviour
         }
         
     }
+    void CheckBalanceStats()
+    {
+        //Determines whihc stat is the lowest
+        float lowestStat = Mathf.Min(money,Electricity, People, Stability);
+        if(lowestStat == money && money <= 10)
+        {
+            DemolishAndReplace(Building.BuildingType.Commercial);
+        }
+        else if(lowestStat == Electricity && Electricity <= 10)
+        {
+            DemolishAndReplace(Building.BuildingType.Industrial);
+        }
+        else if(lowestStat == People && People <= 10)
+        {
+            DemolishAndReplace(Building.BuildingType.Residential);
+        }
+        else if(lowestStat == Stability && Stability <= 10)
+        {
+            DemolishAndReplace(Building.BuildingType.Government);
+        }
+        
+    }
+    void DemolishAndReplace(Building.BuildingType TargetbuildingType)
+    {
+        foreach(Building building in buildingGenerator.buildings)
+        {
+            if(building.buildingType != TargetbuildingType)
+            {
+                buildingGenerator.buildings.Remove(building);
+                Destroy(building.gameObject);
+                
+                Building newBuilding = buildingGenerator.GenerateBuilding(TargetbuildingType, building.buildingSize, building.transform.position);
+                buildingGenerator.buildings.Add(newBuilding);
+                break;
+            }
+        }
+    }
 }
-

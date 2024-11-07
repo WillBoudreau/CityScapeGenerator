@@ -49,4 +49,19 @@ public class BuildingGenerator : MonoBehaviour
         }
         return true;
     }
+    public Building GenerateBuilding(Building.BuildingType buildingType, Building.BuildingSize buildingSize, Vector3 position)
+    {
+        Building newBuilding = Instantiate(buildingPrefab, position, Quaternion.identity);
+
+        newBuilding.buildingType = buildingType;
+        newBuilding.SelectType(newBuilding.buildingType);
+
+        newBuilding.buildingSize = buildingSize;
+        newBuilding.UpgradeSize(newBuilding.buildingSize);
+
+        newBuilding.transform.localScale = newBuilding.GenerateSize();
+        buildings.Add(newBuilding);
+        
+        return newBuilding;
+    }
 }
