@@ -56,25 +56,23 @@ public class Building : MonoBehaviour
     }
     public void UpgradeSize(BuildingSize buildingSize)
     {
+        Vector3 newSize;
         switch (buildingSize)
         {
             case BuildingSize.Small:
-                BuildingWidth = 5f;
-                BuildingHeight = 10f;
-                BuildingLength = 5f;
+                newSize = new Vector3(5f, 10f, 5f);
                 break;
             case BuildingSize.Medium:
-                BuildingWidth = 5f;
-                BuildingHeight = 20f;
-                BuildingLength = 5f;
+                newSize = new Vector3(5f, 20f, 5f);
                 break;
             case BuildingSize.Large:
-                BuildingWidth = 5f;
-                BuildingHeight = 30f;
-                BuildingLength = 5f;
+                newSize = new Vector3(5f, 30f, 5f);
+                break;
+            default:
+                newSize = transform.localScale;
                 break;
         }
-        transform.localScale = GenerateSize();
+        StartCoroutine(UpgradeSizeGradually(newSize, 1f));
     }
     void GenerateBuilding()
     {
@@ -106,5 +104,17 @@ public class Building : MonoBehaviour
         BuildingType newType = (BuildingType)(((int)building.buildingType + 1) % System.Enum.GetValues(typeof(BuildingType)).Length);
         building.buildingType = newType;
         building.SelectType(newType);
+    }
+    IEnumerator UpgradeSizeGradually(Vector3 targetSize, float duration)
+    {
+        Vector3 startSize = transform.localScale;
+        float time = 0;
+        while (time < duration)
+        {
+            transform.localScale = Vector3.Lerp(startSize, targetSize, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        transform.localScale = targetSize;
     }
 }

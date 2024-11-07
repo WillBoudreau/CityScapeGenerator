@@ -28,6 +28,11 @@ public class CityGenerator : MonoBehaviour
     }
     void CreateCity()
     {
+        foreach (Building building in buildingGenerator.buildings)
+        {
+            Destroy(building.gameObject);
+        }
+        buildingGenerator.buildings.Clear();
         roadGenerator.GenerateRoads(CityWidth, CityLength,buildingGenerator);
         buildingGenerator.GenerateBuildings(CityWidth, CityLength,roadGenerator);
     }

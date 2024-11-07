@@ -1553,7 +1553,7 @@ Transform:
   m_GameObject: {fileID: 706725316}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 202.1, y: -0.5, z: 241}
+  m_LocalPosition: {x: 108, y: -0.5, z: 241}
   m_LocalScale: {x: 50, y: 1, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1746,7 +1746,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.30041814, y: -0, z: -0, w: 0.95380765}
-  m_LocalPosition: {x: 129.17, y: 159.5, z: -85.7}
+  m_LocalPosition: {x: 110, y: 159.5, z: -85.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3149,7 +3149,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingGenerator: {fileID: 844427683}
-  roadGenerator: {fileID: 844427682}
   FillCircle: {fileID: 1875312672}
   TimerSlider: {fileID: 1798400847}
   money: 0

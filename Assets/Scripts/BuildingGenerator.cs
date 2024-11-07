@@ -17,6 +17,7 @@ public class BuildingGenerator : MonoBehaviour
             Destroy(building.gameObject);
         }
         buildings.Clear();
+        
         for (int i = (int)roadGenerator.RoadWidth; i < CityWidth; i += (int)BuildingSpacing)
         {
             for (int j = (int)roadGenerator.RoadWidth; j < CityLength; j += (int)BuildingSpacing)
@@ -61,7 +62,7 @@ public class BuildingGenerator : MonoBehaviour
 
         newBuilding.transform.localScale = newBuilding.GenerateSize();
         buildings.Add(newBuilding);
-        
+
         return newBuilding;
     }
 }

@@ -73,6 +73,7 @@ public class CityStats : MonoBehaviour
         GeneratePeople();
         GenerateElectricity();
         GenerateStability();
+        GenerateCommercialBonus();
         SubstractStats();
         CheckBalanceStats();
     }
@@ -110,15 +111,15 @@ public class CityStats : MonoBehaviour
         {
             UpgradeBuilding(Building.BuildingType.Commercial);
         }
-        else if(ChooseUpgrade(Building.BuildingType.Industrial, costToUpgradeIndustrial, 50, 5, 5))
+        else if(ChooseUpgrade(Building.BuildingType.Industrial, costToUpgradeIndustrial, 0, 5, 5))
         {
             UpgradeBuilding(Building.BuildingType.Industrial);
         }
-        else if(ChooseUpgrade(Building.BuildingType.Government, costToUpgradeGovernment, 200, 20, 20))
+        else if(ChooseUpgrade(Building.BuildingType.Government, costToUpgradeGovernment, 200, 20, 0))
         {
             UpgradeBuilding(Building.BuildingType.Government);
         }
-        else if(ChooseUpgrade(Building.BuildingType.Residential, costToUpgradeResidential, 100, 10, 10))
+        else if(ChooseUpgrade(Building.BuildingType.Residential, costToUpgradeResidential, 100, 0, 10))
         {
             UpgradeBuilding(Building.BuildingType.Residential);
         }
@@ -133,11 +134,11 @@ public class CityStats : MonoBehaviour
             }
             else if(building.buildingType == Building.BuildingType.Industrial)
             {
-                money += 25;
+                money += 25 * CommercialBonus;
             }
             else if(building.buildingType == Building.BuildingType.Government)
             {
-                money += 100;
+                money += 100 * CommercialBonus;
             }
         }
     }
@@ -208,8 +209,30 @@ public class CityStats : MonoBehaviour
             Stability = 100;
         }
     }
+    void GenerateCommercialBonus()
+    {
+        foreach(Building building in buildingGenerator.buildings)
+        {
+            if(building.buildingType == Building.BuildingType.Commercial)
+            {
+                if(building.buildingSize == Building.BuildingSize.Small)
+                {
+                    CommercialBonus += 0.05f;
+                }
+                else if(building.buildingSize == Building.BuildingSize.Medium)
+                {
+                    CommercialBonus += 0.1f;
+                }
+                else if(building.buildingSize == Building.BuildingSize.Large)
+                {
+                    CommercialBonus += 0.15f;
+                }
+            }
+        }
+    }
     void SubstractStats()
     {
+        //Substracts the stats from the buildings
         foreach(Building building in buildingGenerator.buildings)
         {
                 if(building.buildingType != Building.BuildingType.Industrial)
@@ -271,6 +294,10 @@ public class CityStats : MonoBehaviour
             }
             if(building.buildingType != Building.BuildingType.Government)
             {
+                if(Stability <= 0)
+                {
+                    Stability = 0;
+                }
                 if(building.buildingSize == Building.BuildingSize.Small)
                 {
                     Stability -= 1f;
@@ -283,10 +310,6 @@ public class CityStats : MonoBehaviour
                 {
                     Stability -= 3f;
                 }
-                if(Stability <= 0)
-                {
-                    Stability = 0;
-                }
             }
         }
         
@@ -295,6 +318,7 @@ public class CityStats : MonoBehaviour
     {
         //Determines whihc stat is the lowest
         float lowestStat = Mathf.Min(money,Electricity, People, Stability);
+        //Checks if the lowest stat is below 10 and then demolishes and replaces the building
         if(lowestStat == money && money <= 10)
         {
             DemolishAndReplace(Building.BuildingType.Commercial);
@@ -315,6 +339,7 @@ public class CityStats : MonoBehaviour
     }
     void DemolishAndReplace(Building.BuildingType TargetbuildingType)
     {
+        //Finds the building with the lowest stat and replaces it with a new building
         foreach(Building building in buildingGenerator.buildings)
         {
             if(building.buildingType != TargetbuildingType)
